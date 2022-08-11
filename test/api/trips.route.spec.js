@@ -4,6 +4,7 @@
 const request = require('supertest');
 const app = require('../../app');
 const mongoose = require('mongoose');
+const Trip = require('../../models/trip.model')
 
 
 //---------
@@ -23,10 +24,20 @@ describe('Pruebas sobre la API de trips', () => {
         await mongoose.connect('mongodb://127.0.0.1/familyTrips')
     })
 
-    // --> comprobar si la URL funciona y si me devuelve lo que queremos
-    describe('GET /api/trips', () => {
+    // --> DESPUÉS DE LOS TESTS:  desconexión bbdd
+        
+      afterAll(async ()=>{
+        await mongoose.disconnect();
+    })
 
-// ----------
+
+    // ============  
+    // TESTS:
+    // --> comprobar si la URL funciona y si me devuelve lo que queremos 
+    // ============  
+
+    // --> GET
+    describe('GET /api/trips', () => {
 
         let response;
         beforeEach(async () => {
@@ -53,14 +64,47 @@ describe('Pruebas sobre la API de trips', () => {
 // ----------
         it('La petición nos devuelve un array de trips', async () => {
             expect(response.body).toBeInstanceOf(Array);
+          
         })
 
     });
 
-    // --> DESPUÉS DE LOS TESTS:  desconexión bbdd
+    // --> POST
+    describe('POST /api/trips', () => {
 
-    afterAll(async ()=>{
-        await mongoose.disconnect();
+        // creamos datos con esquema para hacer prueba
+        const newTrip = {name: 'test trip', destination: 'oklajoma', category: 'familiar', start_date:'2022-06-20'};
+
+        const wrongTrip = {nombre: 'test trip'};
+
+        //para no llenar la bbdd de KK
+        afterAll(async() => {
+            await Trip.deleteMany({name:'test trip'})
+        })
+
+        it('La ruta funciona', async () => {
+            const response = await request(app).post('/api/trips').send(newTrip);
+
+            expect(response.status).toBe(200);
+            expect(response.headers['content-type']).toContain('json');
+        })
+
+        it('Se inserta correctamente', async () => {
+            const response = await request(app).post('/api/trips').send(newTrip);
+
+            expect(response.body._id).toBeDefined();
+            expect(response.body.name).toBe(newTrip.name)
+
+        })
+
+        it('Error en la inserción', async() => {
+            const response = await request(app).post('/api/trips').send(wrongTrip);
+
+            expect(response.status).toBe(500);
+            expect(response.body.error).toBeDefined();
+
+        })
     })
+
 
 })
