@@ -17,5 +17,16 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.post('/', async (req,res) => {
+    try {
+        //creamos ese post con el método de mongoose create que nos permite pasarle un objeto de datos a ese modelo
+        const newTrip = await Trip.create(req.body);
+        res.json(newTrip); 
+    } catch (error) {
+        res.status(500).json({ error: 'Ha ocurrido un error' })
+
+    }
+})
+
 
 module.exports = router;
