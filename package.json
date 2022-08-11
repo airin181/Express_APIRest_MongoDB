@@ -1,0 +1,33 @@
+{
+  "name": "express_apirest_mongodb",
+  "version": "1.0.0",
+  "description": "Creación de una API desde cero con Express y tomando como base de datos MongoDB",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./bin/server",
+    "dev": "nodemon ./bin/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/airin181/Express_APIRest_MongoDB.git"
+  },
+  "keywords": [
+    "apirest",
+    "mongodb",
+    "express",
+    "nodejs",
+    "git",
+    "github",
+    "javascript"
+  ],
+  "author": "Irene Garcia Merino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/airin181/Express_APIRest_MongoDB/issues"
+  },
+  "homepage": "https://github.com/airin181/Express_APIRest_MongoDB#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.5.2"
+  }
+}
