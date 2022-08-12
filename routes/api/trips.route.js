@@ -28,5 +28,19 @@ router.post('/', async (req,res) => {
     }
 })
 
+//: para parte variable 
+router.put('/:tripId', async (req, res) => {
+        try {
+            const tripEdit = await Trip.findByIdAndUpdate(
+                req.params.tripId, //el ID que viene de la URL
+                req.body, // el objeto con el que se actualiza el doc
+                {new: true} //para que nos devuelva el nuevo objeto y no el anterior
+            );
+            res.json(tripEdit);
+        } catch (error) {
+            res.status(500).json({ error: 'Ha ocurrido un error' })
+        }
+   
+})
 
 module.exports = router;
